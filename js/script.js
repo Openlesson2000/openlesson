@@ -1,30 +1,72 @@
 const btn = document.querySelector('.main__btn');
 let id = document.querySelector('.main__id');
-let img = document.querySelector('.main__img img');
+let go = document.querySelector('.main__go');
+let mainImg = document.querySelector('.main__img');
+let img = mainImg.querySelector('img');
 let desc = document.querySelector('.main__desc');
+let max;
+let min;
 
-
-btn.addEventListener('click', ()=> {
-    next();
+desc.addEventListener('dblclick', ()=> {
+    desc.classList.toggle('active');
+    if(desc.classList.contains('active')){
+        mainImg.style.position = 'absolute';
+        mainImg.style.left = '-100%';
+        btn.style.left = '-100%';
+    }else {
+        mainImg.style.position = 'static';
+        btn.style.left = '20px';
+    }
 })
 
-function next() {  
 
-    let nextId = rand(33, 1);
+id.addEventListener('click', ()=> {
+    id.value = ''
+    id.classList.add('active');
+    
+})
+
+btn.addEventListener('click', ()=> {
+    next(max, min);
+})
+go.addEventListener('click', ()=> {
+    console.log(id.value);
+    opt(next);
+})
+
+function opt(callBack) {  
+    let arr = id.value.split(' ');
+    if(arr.length == 1){
+        max = +arr[0];
+        min = 1;
+        callBack(max, min);
+    }else{
+        max = +arr[1];
+        min = arr[0] == undefined || arr[0] == 0 ? 1 : +arr[0];
+        callBack(max, min);
+    }
+    id.classList.remove('active');
+}
+
+function next(ma, mi) {  
+
+    let getId = rand(ma, mi);
+    let nextId = getId == id.value ? rand(ma, mi) : getId;
 
     arr.forEach(item => {
         if(nextId == item.id){
-            id.innerHTML = item.id;
+            id.value = item.id;
             desc.innerHTML = item.text;
             img.setAttribute('src', item.imgSrc);
+            console.log(id.value);
         }
         
     });
 
 }
 
-function rand(max, min) {  
-    return Math.floor(Math.random() * (max + 1 - min) + min);
+function rand(mx = 33, mn = 1) {  
+    return Math.floor(Math.random() * (mx + 1 - mn) + mn);
 }
 
 const arr = [
